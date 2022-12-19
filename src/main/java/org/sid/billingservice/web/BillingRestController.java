@@ -19,28 +19,27 @@ public class BillingRestController {
 
     private BillRepository billRepository;
     private ProductItemRepository productItemRepository;
-    private CustomerRestClient customerRestClient;
     private ProductItemRestClient productItemRestClient;
+    private CustomerRestClient customerRestClient;
 
-    public BillingRestController(BillRepository billRepository, ProductItemRepository productItemRepository, CustomerRestClient customerRestClient, ProductItemRestClient productItemRestClient) {
+    public BillingRestController(BillRepository billRepository, ProductItemRepository productItemRepository, ProductItemRestClient productItemRestClient, CustomerRestClient customerRestClient) {
         this.billRepository = billRepository;
         this.productItemRepository = productItemRepository;
-        this.customerRestClient = customerRestClient;
         this.productItemRestClient = productItemRestClient;
+        this.customerRestClient = customerRestClient;
     }
 
-
     @GetMapping(path = "/fullBill/{id}")
-    public Bill getBill(@PathVariable Long id){
-        Bill bill = billRepository.findById(id).get();
-        Customer customer=customerRestClient.getCustomerById(bill.getCustomerID());
+    public Bill getBill(@PathVariable(name = "id") Long id) {
+        Bill bill=billRepository.findById(id).get();
+        Customer customer=customerRestClient.customerById(bill.getCustomerId());
         bill.setCustomer(customer);
         bill.getProductItems().forEach(pi->{
-            Product product = productItemRestClient.getProductById(pi.getProductID());
+            Product product=productItemRestClient.getProductById(pi.getProductID());
             pi.setProduct(product);
         });
-
         return bill;
 
     }
+
 }

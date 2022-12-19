@@ -9,7 +9,4 @@ import java.util.Collection;
 @RepositoryRestResource
 public interface ProductItemRepository extends JpaRepository<ProductItem,Long> {
 
-    public Collection<ProductItem> findByBillId(Long id);
-
-
 }
